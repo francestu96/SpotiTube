@@ -19,14 +19,19 @@ YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v="
 DESTINATION = "playlists/"
 
 def get_tracks(playlist_id):
-    tracks = []
-    for track in sp.playlist_tracks(playlist_id)["items"]:
+    results = sp.playlist_tracks(playlist_id)
+    tracks = results['items']
+    while results['next']:
+        results = sp.next(results)
+        tracks.extend(results['items'])
+
+    result = []
+    for track in tracks:
         track_name = track["track"]["name"]
         track_artists = [x["name"] for x in track["track"]["artists"]]
-        result = track_name, track_artists
-        tracks.append(result)
-
-    return tracks
+        result.append((track_name, track_artists))
+    
+    return result
 
 client_credentials_manager = SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
