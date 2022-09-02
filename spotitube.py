@@ -13,7 +13,7 @@ from pathlib import Path
 from moviepy.editor import *
 from spotipy.oauth2 import SpotifyClientCredentials
 
-THREADNO = 10
+THREAD_NO = 10
 LOGFILE = "errors.log"
 DESTINATION = "../"
 YOUTUBE_QUERY_URL = "https://www.youtube.com/results?search_query="
@@ -85,9 +85,9 @@ if __name__ == "__main__":
     tracks = get_tracks(sp, playlist_id)
 
     threads = []
-    for x in range(THREADNO):
-        start = x * math.ceil(len(tracks) / THREADNO)
-        end = start + math.ceil(len(tracks) / THREADNO)
+    for x in range(THREAD_NO):
+        start = x * math.ceil(len(tracks) / THREAD_NO)
+        end = start + math.ceil(len(tracks) / THREAD_NO)
         threads.append(threading.Thread(target=save_tracks, args=(tracks[start:end],)))
         threads[-1].start()
 
